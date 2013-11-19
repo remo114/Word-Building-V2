@@ -12,7 +12,7 @@ public class Marker extends Sprite{
 	
 	Sprite letter;
 	Marker left,right,markerSelf;
-	int sound;
+	int sound,leftValue,rightValue;
 	boolean isSingle = true;
 	public static String TAG = "Marker ";
 	
@@ -26,6 +26,8 @@ public class Marker extends Sprite{
 		sound = letterSound;
 		left = null;
 		right = null;
+		leftValue= -1;
+		rightValue = 1;
 		
 		letter = new Sprite(pX, pY, pTextureRegion, pSpriteVertexBufferObject){
 			@Override

@@ -80,7 +80,7 @@ public class Scheming {
 					leftMarker.left = m;
 				}
 
-				rightMarker = getRightLastObject(marker);
+				rightMarker = getRightLastObject(marker); 
 				m = getColliedObject(rightMarker);
 				if (m != null) {
 					m.isSingle = false;
@@ -111,42 +111,42 @@ public class Scheming {
 		magnaticJoin(marker);
 
 		for (int i = 0; i < BaseActivity.markers.size(); i++) {
-			if (BaseActivity.markers.get(i).isSingle && !BaseActivity.markers.get(i).equals(marker)) {
-
-				spr2.setPosition(BaseActivity.markers.get(i).letter.getX(),	BaseActivity.markers.get(i).letter.getY());
-
-				if (spr2.collidesWith(spr1)) {
-					// BaseActivity.markers.get(i).letter.setPosition(marker.letter.getX()
-					// + marker.letter.getWidth(), marker.letter.getY());
-					return BaseActivity.markers.get(i); 
-				}
-				
-			}
-			/*else if(!BaseActivity.markers.get(i).isSingle){
-				if(marker.right != null){
-					if(!marker.right.equals(BaseActivity.markers.get(i))){
-						if (spr2.collidesWith(spr1)) {
-							// BaseActivity.markers.get(i).letter.setPosition(marker.letter.getX()
-							// + marker.letter.getWidth(), marker.letter.getY());
-							return BaseActivity.markers.get(i); 
-						}
-					}
-				}
-				else if(marker.left != null){
-					if(!marker.left.equals(BaseActivity.markers.get(i))){
-						if (spr2.collidesWith(spr1)) {
-							// BaseActivity.markers.get(i).letter.setPosition(marker.letter.getX()
-							// + marker.letter.getWidth(), marker.letter.getY());
+			if(!BaseActivity.markers.get(i).equals(marker)){
+				if (true /*BaseActivity.markers.get(i).isSingle*/) {
+	
+					spr2.setPosition(BaseActivity.markers.get(i).letter.getX(),	BaseActivity.markers.get(i).letter.getY());
+	
+					if (spr2.collidesWith(spr1)) { 
+						if(isAllowedToCollied(marker, BaseActivity.markers.get(i))){
 							return BaseActivity.markers.get(i);
-						}
-					}
+						} 
+					}	
 				}
-			}*/
+			}
 				
 		}
 		return null; 
 	}
-
+	
+	public static boolean isAllowedToCollied(Marker marker, Marker m2){
+		// if collied on left 
+		if( m2.letter.getX() < marker.letter.getX()){
+			if(m2.rightValue != 0 && marker.leftValue !=0 && m2.rightValue + marker.leftValue == 0){
+				m2.rightValue =0;
+				marker.leftValue=0;
+				return true;
+			}
+		}
+		//if collied on right 
+		else if( m2.letter.getX() > marker.letter.getX()){
+			if(m2.leftValue != 0 && marker.rightValue != 0 && m2.leftValue+ marker.rightValue == 0){
+				m2.leftValue = 0;
+				marker.rightValue = 0;
+				return true;
+			}
+		}
+		return false;
+	}
 	public static void moveBlock(float px, float py, float ax, float ay,
 			Marker marker) {
 		Marker leftLast = getLeftLastObject(marker);

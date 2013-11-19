@@ -76,27 +76,28 @@ public class BaseActivity extends SimpleBaseGameActivity {
 		// TODO Auto-generated method stub
 		BitmapTextureAtlasTextureRegionFactory.setAssetBasePath("gfx/");
 		BgBuildableBitmapTextureAtlas = new BuildableBitmapTextureAtlas(this.getTextureManager(), 2900, 2532,TextureOptions.DEFAULT);
-		LettersBuildableBitmapTextureAtlas = new BuildableBitmapTextureAtlas(this.getTextureManager(), 2900, 2532,TextureOptions.DEFAULT);
+		LettersBuildableBitmapTextureAtlas = new BuildableBitmapTextureAtlas(this.getTextureManager(), 1400, 1400,TextureOptions.DEFAULT);
 		
 		BgTextureReason = BitmapTextureAtlasTextureRegionFactory.createFromAsset(BgBuildableBitmapTextureAtlas, this, "jungle16.png");
-		SeizureTextureReason = BitmapTextureAtlasTextureRegionFactory.createFromAsset(BgBuildableBitmapTextureAtlas, this, "kacchi.png");
+		SeizureTextureReason = BitmapTextureAtlasTextureRegionFactory.createFromAsset(LettersBuildableBitmapTextureAtlas, this, "kacchi.png");
 		
-		textureReason.add(BitmapTextureAtlasTextureRegionFactory.createFromAsset(BgBuildableBitmapTextureAtlas, this, "Letters/akar.png"));
+		textureReason.add(BitmapTextureAtlasTextureRegionFactory.createFromAsset(LettersBuildableBitmapTextureAtlas, this, "Letters/akar.png"));
 		letterName.add("akar");
-		textureReason.add(BitmapTextureAtlasTextureRegionFactory.createFromAsset(BgBuildableBitmapTextureAtlas, this, "Letters/mo.png"));
+		textureReason.add(BitmapTextureAtlasTextureRegionFactory.createFromAsset(LettersBuildableBitmapTextureAtlas, this, "Letters/mo.png"));
 		letterName.add("moo");
-		textureReason.add(BitmapTextureAtlasTextureRegionFactory.createFromAsset(BgBuildableBitmapTextureAtlas, this, "Letters/letter_lo.png"));
+		textureReason.add(BitmapTextureAtlasTextureRegionFactory.createFromAsset(LettersBuildableBitmapTextureAtlas, this, "Letters/letter_lo.png"));
 		letterName.add("loo");
-		textureReason.add(BitmapTextureAtlasTextureRegionFactory.createFromAsset(BgBuildableBitmapTextureAtlas, this, "Letters/letter_to.png"));
+		textureReason.add(BitmapTextureAtlasTextureRegionFactory.createFromAsset(LettersBuildableBitmapTextureAtlas, this, "Letters/letter_to.png"));
 		letterName.add("too");
-		textureReason.add(BitmapTextureAtlasTextureRegionFactory.createFromAsset(BgBuildableBitmapTextureAtlas, this, "Letters/shoroa.png"));
+		textureReason.add(BitmapTextureAtlasTextureRegionFactory.createFromAsset(LettersBuildableBitmapTextureAtlas, this, "Letters/shoroa.png"));
 		letterName.add("shoroa");
-		/*textureReason.add(BitmapTextureAtlasTextureRegionFactory.createFromAsset(BgBuildableBitmapTextureAtlas, this, "Letters/shoroa.png"));
+		/*textureReason.add(BitmapTextureAtlasTextureRegionFactory.createFromAsset(LettersBuildableBitmapTextureAtlas, this, "Letters/shoroa.png"));
 		letterName.add("shoroa");*/
-		//textureReason.add(BitmapTextureAtlasTextureRegionFactory.createFromAsset(BgBuildableBitmapTextureAtlas, this, "Letters/letter_mo.png"));
+		//textureReason.add(BitmapTextureAtlasTextureRegionFactory.createFromAsset(LettersBuildableBitmapTextureAtlas, this, "Letters/letter_mo.png"));
 		
 		try {
 			BgBuildableBitmapTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 0, 0));
+			LettersBuildableBitmapTextureAtlas.build(new BlackPawnTextureAtlasBuilder<IBitmapTextureAtlasSource, BitmapTextureAtlas>(0, 0, 0));
 			BgBuildableBitmapTextureAtlas.load();
 			LettersBuildableBitmapTextureAtlas.load();
 			//ParrotBitmapTextureAtlus.load();
