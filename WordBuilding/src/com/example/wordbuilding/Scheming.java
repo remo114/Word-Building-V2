@@ -7,18 +7,21 @@ import android.util.Log;
 
 public class Scheming {
 
-	public static Marker leftMarker, rightMarker;
+	public static Marker leftMarker, rightMarker,boundaryMarker;
 	public static String TAG = "Scheming class";
+	
+	public static Sprite spr1 = new Sprite(0, 0,BaseActivity.textureReason.get(0), BaseActivity.vobm);
+	public static Sprite spr2 = new Sprite(0, 0,BaseActivity.textureReason.get(0), BaseActivity.vobm);
 
 	public static void collutionDetection(Marker marker) {
 		Marker m;
 		if (marker.left == null && marker.right == null) {
-			Log.d(TAG, "if Left and Right both are null ");
+			//Log.d(TAG, "if Left and Right both are null ");
 			m = getColliedObject(marker);
 			if (m != null) {
-				Log.d(TAG, "If collied object is null ");
+				//Log.d(TAG, "If collied object is null ");
 				int lr = getLeftRight(marker, m);
-				Log.d(TAG, "Get left or right: " + lr);
+				//Log.d(TAG, "Get left or right: " + lr);
 				if (lr == 1) {
 					m.isSingle = false;
 					marker.isSingle = false;
@@ -33,9 +36,9 @@ public class Scheming {
 
 			}
 		} else {
-			Log.d(TAG, "if Left and Right both are not null ");
+			//Log.d(TAG, "if Left and Right both are not null ");
 			if (marker.right == null) {
-				Log.d(TAG, "if Right is empty ");
+				//Log.d(TAG, "if Right is empty ");
 				// leftMarker = getLeftLastObject(marker);
 				m = getColliedObject(marker);
 				if (m != null) {
@@ -43,7 +46,7 @@ public class Scheming {
 					m.left = marker;
 					marker.right = m;
 				}
-				leftMarker = getLeftLastObject(marker);
+				leftMarker = marker.mostLeft;
 				m = getColliedObject(leftMarker);
 				if (m != null) {
 					m.isSingle = false;
@@ -53,7 +56,7 @@ public class Scheming {
 
 			}
 			if (marker.left == null) {
-				Log.d(TAG, "if Left is empty ");
+				//Log.d(TAG, "if Left is empty ");
 				// rightMarker = getRightLastObject(marker);
 				m = getColliedObject(marker);
 				if (m != null) {
@@ -62,7 +65,7 @@ public class Scheming {
 					marker.left = m;
 				}
 
-				rightMarker = getRightLastObject(marker);
+				rightMarker = marker.mostRight;
 				m = getColliedObject(rightMarker);
 				if (m != null) {
 					m.isSingle = false;
@@ -72,7 +75,7 @@ public class Scheming {
 			}
 			if (marker.left != null && marker.right != null) {
 				Log.d(TAG, "if Left Right is not empty ");
-				leftMarker = getLeftLastObject(marker);
+				leftMarker = marker.mostLeft;
 				m = getColliedObject(leftMarker);
 				if (m != null) {
 					m.isSingle = false;
@@ -80,7 +83,7 @@ public class Scheming {
 					leftMarker.left = m;
 				}
 
-				rightMarker = getRightLastObject(marker); 
+				rightMarker = marker.mostRight; 
 				m = getColliedObject(rightMarker);
 				if (m != null) {
 					m.isSingle = false;
@@ -94,19 +97,21 @@ public class Scheming {
 	}
 
 	public static Marker getColliedObject(Marker marker) {
+		
+		if(marker == null) return null;
 
-		Sprite spr1 = new Sprite(marker.letter.getX(), marker.letter.getY(),
-				BaseActivity.textureReason.get(0), BaseActivity.vobm);
-		Sprite spr2 = new Sprite(marker.letter.getX(), marker.letter.getY(),
-				BaseActivity.textureReason.get(0), BaseActivity.vobm);
+		/*Sprite spr1 = new Sprite(marker.letter.getX(), marker.letter.getY(),BaseActivity.textureReason.get(0), BaseActivity.vobm);
+		Sprite spr2 = new Sprite(marker.letter.getX(), marker.letter.getY(),BaseActivity.textureReason.get(0), BaseActivity.vobm);*/
 
+		Log.d(TAG, " Marker name: " + marker.letter.getUserData() );
+		spr1.setPosition(marker.letter.getX(), marker.letter.getY());
 		spr1.setVisible(false);
 		spr1.setHeight(marker.letter.getHeight());
-		spr1.setWidth(marker.letter.getWidth() + 20);
+		spr1.setWidth(marker.letter.getWidth() + 10);
 
 		spr2.setVisible(false);
 		spr2.setHeight(marker.letter.getHeight());
-		spr2.setWidth(marker.letter.getWidth() + 20);
+		spr2.setWidth(marker.letter.getWidth() + 10);
 
 		magnaticJoin(marker);
 
@@ -116,10 +121,13 @@ public class Scheming {
 	
 					spr2.setPosition(BaseActivity.markers.get(i).letter.getX(),	BaseActivity.markers.get(i).letter.getY());
 	
-					if (spr2.collidesWith(spr1)) { 
-						if(isAllowedToCollied(marker, BaseActivity.markers.get(i))){
-							return BaseActivity.markers.get(i);
-						} 
+					 
+					if(allowJoin(spr1,spr2)){
+						if (spr2.collidesWith(spr1)) {
+							if(isAllowedToCollied(marker, BaseActivity.markers.get(i))){
+								return BaseActivity.markers.get(i);
+							} 
+						}
 					}	
 				}
 			}
@@ -141,20 +149,18 @@ public class Scheming {
 		else if( m2.letter.getX() > marker.letter.getX()){
 			if(m2.leftValue != 0 && marker.rightValue != 0 && m2.leftValue+ marker.rightValue == 0){
 				m2.leftValue = 0;
-				marker.rightValue = 0;
+				marker.rightValue = 0; 
 				return true;
 			}
 		}
 		return false;
 	}
-	public static void moveBlock(float px, float py, float ax, float ay,
-			Marker marker) {
-		Marker leftLast = getLeftLastObject(marker);
+	public static void moveBlock(float px, float py, float ax, float ay, Marker marker) {
+		Marker leftLast = marker.mostLeft;
 
 		while (leftLast != null) {
 			if (!leftLast.equals(marker)) {
-				float nx = leftLast.letter.getX() + (ax - px), ny = leftLast.letter
-						.getY() + (ay - py);
+				float nx = leftLast.letter.getX() + (ax - px), ny = leftLast.letter.getY() + (ay - py);
 				leftLast.letter.setPosition(nx, ny);
 			}
 			leftLast = leftLast.right;
@@ -196,14 +202,9 @@ public class Scheming {
 	}
 
 	public static boolean allowJoin(Sprite sp1, Sprite sp2) {
-		if (sp1.getX() - sp2.getX() > 105 && sp1.getX() - sp2.getX() < 180
-				&& sp1.getY() - sp2.getY() < 25
-				&& sp1.getY() - sp2.getY() > -25) {
+		if (sp1.getX() - sp2.getX() > 105 && sp1.getX() - sp2.getX() < 205 && sp1.getY() - sp2.getY() < 40 && sp1.getY() - sp2.getY() > - 40) {
 			return true;
-		} else if (sp2.getX() - sp1.getX() > 105
-				&& sp2.getX() - sp1.getX() < 180
-				&& sp2.getY() - sp1.getY() < 25
-				&& sp2.getY() - sp1.getY() > -25) {
+		} else if (sp2.getX() - sp1.getX() > 105 && sp2.getX() - sp1.getX() < 205 && sp2.getY() - sp1.getY() < 40 && sp2.getY() - sp1.getY() > - 40) {
 			return true;
 		}
 		return false;
@@ -211,7 +212,7 @@ public class Scheming {
 	}
 
 	public static void magnaticJoin(Marker marker) {
-		marker = getLeftLastObject(marker);
+		//marker = getLeftLastObject(marker);
 		while (marker != null) {
 			if (marker.left != null) {
 				marker.letter.setPosition(marker.left.letter.getX()
@@ -223,8 +224,10 @@ public class Scheming {
 	}
 
 	public static int checkBoundary(Marker marker) {
-		Marker leftMarker1 = getLeftLastObject(marker);
-		Marker rightMarker1 = getRightLastObject(marker);
+		Marker leftMarker1 = marker.mostLeft;
+		Marker rightMarker1 = marker.mostRight;
+		
+		boundaryMarker = marker;
 
 		if (leftMarker1 == null) {
 			leftMarker1 = marker;
@@ -233,6 +236,7 @@ public class Scheming {
 			rightMarker1 = marker;
 		}
 
+		//Left 
 		if (leftMarker1.letter.getX() < -30) {
 			while (leftMarker1 != null) {
 				MoveModifier mf = new MoveModifier(0.4f,
@@ -244,7 +248,7 @@ public class Scheming {
 			}
 			return 1;
 		}
-
+		//Top
 		else if (leftMarker1.letter.getY() < -20) {
 			while (leftMarker1 != null) {
 				MoveModifier mf = new MoveModifier(0.4f,
@@ -256,7 +260,7 @@ public class Scheming {
 			}
 			return 2;
 		}
-
+		//Right
 		else if (rightMarker1.letter.getX() + 100 > BaseActivity.CAMERA_WIDTH + 30) {
 			while (rightMarker1 != null) {
 				MoveModifier mf = new MoveModifier(0.4f,
@@ -267,7 +271,9 @@ public class Scheming {
 				rightMarker1 = rightMarker1.left;
 			}
 			return 3;
-		} else if (leftMarker1.letter.getY() + 100 > BaseActivity.CAMERA_HEIGHT + 20) {
+		}
+		//Bottom 
+		else if (leftMarker1.letter.getY() + 100 > BaseActivity.CAMERA_HEIGHT + 20) {
 			while (leftMarker1 != null) {
 				MoveModifier mf = new MoveModifier(0.4f,
 						leftMarker1.letter.getX(), leftMarker1.letter.getX(),
@@ -278,7 +284,25 @@ public class Scheming {
 			}
 			return 4;
 		}
-
+		
 		return 0;
 	}
+	
+/*public static void delayBounderyChk (){
+		
+		DelayModifier dm2 = new DelayModifier(4,new IEntityModifierListener() {
+			
+			@Override
+			public void onModifierStarted(IModifier<IEntity> arg0,
+					IEntity arg1) {
+				
+			}
+
+			@Override
+			public void onModifierFinished(IModifier<IEntity> arg0,
+						IEntity arg1) {
+				
+				}
+		});		
+	}*/
 }

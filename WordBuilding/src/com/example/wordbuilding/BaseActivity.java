@@ -2,10 +2,14 @@ package com.example.wordbuilding;
 
 import java.util.ArrayList;
 
+import org.andengine.engine.Engine;
 import org.andengine.engine.camera.Camera;
 import org.andengine.engine.options.EngineOptions;
 import org.andengine.engine.options.ScreenOrientation;
 import org.andengine.engine.options.resolutionpolicy.RatioResolutionPolicy;
+import org.andengine.entity.IEntity;
+import org.andengine.entity.modifier.DelayModifier;
+import org.andengine.entity.modifier.IEntityModifier.IEntityModifierListener;
 import org.andengine.entity.scene.Scene;
 import org.andengine.entity.sprite.Sprite;
 import org.andengine.opengl.texture.TextureOptions;
@@ -18,6 +22,7 @@ import org.andengine.opengl.texture.atlas.buildable.builder.ITextureAtlasBuilder
 import org.andengine.opengl.texture.region.ITextureRegion;
 import org.andengine.opengl.vbo.VertexBufferObjectManager;
 import org.andengine.ui.activity.SimpleBaseGameActivity;
+import org.andengine.util.modifier.IModifier;
 
 import android.content.Context;
 import android.view.Display;
@@ -36,6 +41,7 @@ public class BaseActivity extends SimpleBaseGameActivity {
 	public static VertexBufferObjectManager vobm;
 	public static Context context;
 	public static EngineOptions engOps;
+	public static Engine eng;
 	
 	public static BuildableBitmapTextureAtlas BgBuildableBitmapTextureAtlas;
 	public static BuildableBitmapTextureAtlas LettersBuildableBitmapTextureAtlas;
@@ -48,6 +54,8 @@ public class BaseActivity extends SimpleBaseGameActivity {
 	public static ArrayList<Marker> markers;
 	
 	public static ArrayList<String> letterName;
+	
+	public static boolean isSeizure;
 	
 	
 	
@@ -64,10 +72,10 @@ public class BaseActivity extends SimpleBaseGameActivity {
 		markers = new ArrayList<Marker>();
 		letterName = new ArrayList<String>();
 		
-		
 		mCamera = new Camera(0, 0, CAMERA_WIDTH, CAMERA_HEIGHT);
 	    engOps = new EngineOptions(true, ScreenOrientation.LANDSCAPE_SENSOR, new RatioResolutionPolicy(CAMERA_WIDTH, CAMERA_HEIGHT), mCamera);
 		engOps.getTouchOptions().setNeedsMultiTouch(true);
+		eng = new Engine(engOps);
 	    return engOps; 
 	}
 
@@ -137,7 +145,7 @@ public class BaseActivity extends SimpleBaseGameActivity {
 		
 		
 		seizure = new Seizure(10, 10,110,110, SeizureTextureReason,getVertexBufferObjectManager(),getApplicationContext(),0);
-		
+		mCurrentScene.sortChildren();
 		return mCurrentScene;
 	}
 	
@@ -153,5 +161,7 @@ public class BaseActivity extends SimpleBaseGameActivity {
 		Sound.setSingleSound("shoroa", R.raw.shoroa);	
 		
 	}
+	
+	
 
 }
